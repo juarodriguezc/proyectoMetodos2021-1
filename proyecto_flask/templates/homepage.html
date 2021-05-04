@@ -1,12 +1,18 @@
 {% extends 'layouts.html'%}
 
-{%block content%}
-<h1>Página de inicio</h1>
-
-<div class="test">
-    <p>Test del css</p>
+{%block contentA%}
+<div class="contentA">
+    <div class="card text-center">
+        <div class="card-body">
+            <br>
+            <h1 class="card-title">Métodos numéricos 2021-I</h1>
+            <br>
+            <p class="card-text">Nicolás Darío Mejía Borda </p>
+            <p class="card-text">Juan Sebastián Rodríguez Castellanos </p>
+            <br>
+        </div>
+    </div>
 </div>
-
 <script src="{{url_for('static',filename='main.js')}}"></script>
 
-{%endblock content%}
+{%endblock contentA%}
