@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import random 
+import random
 import matplotlib.pyplot as plt
 #Load image from assets
 img = cv2.imread('assets/img_test_detection2.jpeg' , -1)
