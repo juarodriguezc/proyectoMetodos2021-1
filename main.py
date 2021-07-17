@@ -24,4 +24,13 @@ mask = cv2.inRange(hsv, lower_blue,upper_blue)
 cv2.imshow('Image' , mask)
 cv2. waitKey(0)
 cv2.destroyAllWindows()
-print(mask)
+#Image data recolection
+#Use the average value from each point
+#Create empty np.array
+print(type(mask))
+mask[584:598,534:548] = 255
+cv2.imshow('Image' , mask)
+cv2. waitKey(0)
+cv2.destroyAllWindows()
+plt.imshow(mask)
+plt.show()
