@@ -15,6 +15,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QFileDialog, QAction
 from PyQt5.QtGui import QPixmap
 
+import getPointsCV2
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -241,12 +243,13 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+        
 
         #Actions
 
         #Load Image
         self.actionLoad_Image.triggered.connect(self.loadImage)
+        
 
 
 
@@ -276,6 +279,9 @@ class Ui_MainWindow(object):
         imagePath, _ = QFileDialog.getOpenFileName()
         pixmap = QPixmap(imagePath)
         self.img_original.setPixmap(pixmap)
+        print(imagePath)
+        getPointsCV2.getPointsImage(imagePath)
+
         
 
 if __name__ == "__main__":
