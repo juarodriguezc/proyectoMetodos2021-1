@@ -1,5 +1,6 @@
 from numpy import *
 from scipy import *
+import VectorToPolinomio as VTP
 #puntos = [[0, 1], [1, 2], [2, 3]]
 puntos = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
 def polinomial(puntos):
@@ -19,4 +20,4 @@ def polinomial(puntos):
 
     for i in range(len(r)):
         rarray.append(round(r[i][0], 5))
-    return(rarray)
+    return(VTP.vtp(rarray))
