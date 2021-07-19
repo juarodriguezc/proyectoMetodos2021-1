@@ -50,7 +50,7 @@ points_array = np.array(points)
 list_points = []
 img_points = img
 for point in (points_array[::30]):
-    img_points = cv2.circle(img_points, point, 5, (0,0,255), -1)
+    img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
     list_points.append(point)
 cv2.imshow('Image' , img_points)
 cv2. waitKey(0)
@@ -61,4 +61,7 @@ plt.imshow(mask)
 plt.show()
 
 plt.plot((points_array[::30,1]),'o')
+plt.show()
+
+plt.plot()
 plt.show()

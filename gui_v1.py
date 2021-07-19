@@ -13,7 +13,7 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QFileDialog, QAction
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QIcon, QPixmap
 
 import getPointsCV2
 
@@ -22,12 +22,16 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         MainWindow.setAutoFillBackground(False)
+        MainWindow.setStyleSheet("background-color: rgb(247, 247, 247);")
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.title = QtWidgets.QLabel(self.centralwidget)
-        self.title.setGeometry(QtCore.QRect(430, 0, 461, 41))
+        self.title.setGeometry(QtCore.QRect(430, 0, 450, 50))
+        self.title.setStyleSheet("color:rgb(72, 73, 75); font-size:35px;")
+        
+    
 
         font = QtGui.QFont()
         font.setPointSize(24)
@@ -37,105 +41,184 @@ class Ui_MainWindow(object):
         self.title.setAutoFillBackground(False)
         self.title.setObjectName("title")
 
+
+
+        #Font subtitles
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(65)
+        font.setPointSize(14)
+
+
+        #Title load image
+        self.label_original = QtWidgets.QLabel(self.centralwidget)
+        self.label_original.setGeometry(QtCore.QRect(50, 55, 165, 25))
+        self.label_original.setStyleSheet("color:rgb(72, 73, 75);")
+        self.label_original.setFont(font)
+        self.label_original.setObjectName("label_original")
         #Img load image
         self.img_original = QtWidgets.QLabel(self.centralwidget)
         self.img_original.setGeometry(QtCore.QRect(10, 80, 250, 250))
         self.img_original.setText("")
-        self.img_original.setPixmap(QtGui.QPixmap("assets/img_test_detection3.jpeg"))
+        self.img_original.setPixmap(QtGui.QPixmap("assets/imgGUI/loadImage.png"))
         self.img_original.setScaledContents(True)
         self.img_original.setObjectName("img_original")
-        self.label_original = QtWidgets.QLabel(self.centralwidget)
-        self.label_original.setGeometry(QtCore.QRect(70, 50, 151, 20))
-
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_original.setFont(font)
-        self.label_original.setObjectName("label_original")
+        #Button procesar
         self.buttonProcess = QtWidgets.QPushButton(self.centralwidget)
-        self.buttonProcess.setGeometry(QtCore.QRect(270, 180, 90, 50))
+        self.buttonProcess.setGeometry(QtCore.QRect(270, 180, 60, 60))
+        self.buttonProcess.setStyleSheet("background:rgb(150, 150, 150);")
         self.buttonProcess.setObjectName("buttonProcess")
-        self.label_hsv = QtWidgets.QLabel(self.centralwidget)
-        self.label_hsv.setGeometry(QtCore.QRect(420, 50, 151, 20))
+        
 
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
+
+        #Title HSV
+        self.label_hsv = QtWidgets.QLabel(self.centralwidget)
+        self.label_hsv.setGeometry(QtCore.QRect(380, 55, 170, 25))
+        self.label_hsv.setStyleSheet("color:rgb(72, 73, 75);")
         self.label_hsv.setFont(font)
         self.label_hsv.setObjectName("label_hsv")
-
+        #Img hsv 
         self.img_hsv = QtWidgets.QLabel(self.centralwidget)
-        self.img_hsv.setGeometry(QtCore.QRect(370, 80, 250, 250))
+        self.img_hsv.setGeometry(QtCore.QRect(340, 80, 250, 250))
         self.img_hsv.setText("")
-        self.img_hsv.setPixmap(QtGui.QPixmap("assets/img_test_detection3.jpeg"))
+        self.img_hsv.setPixmap(QtGui.QPixmap("assets/imgGUI/hsv.png"))
         self.img_hsv.setScaledContents(True)
         self.img_hsv.setObjectName("img_hsv")
 
+
+        #Title Puntos
+        self.label_puntos = QtWidgets.QLabel(self.centralwidget)
+        self.label_puntos.setGeometry(QtCore.QRect(640, 55, 180, 20))
+        self.label_puntos.setStyleSheet("color:rgb(72, 73, 75);")
+        self.label_puntos.setFont(font)
+        self.label_puntos.setObjectName("label_puntos")
+        #Img puntos
         self.img_points = QtWidgets.QLabel(self.centralwidget)
-        self.img_points.setGeometry(QtCore.QRect(640, 80, 250, 250))
+        self.img_points.setGeometry(QtCore.QRect(600, 80, 250, 250))
         self.img_points.setText("")
-        self.img_points.setPixmap(QtGui.QPixmap("assets/img_test_detection3.jpeg"))
+        self.img_points.setPixmap(QtGui.QPixmap("assets/imgGUI/puntosCV2.png"))
         self.img_points.setScaledContents(True)
         self.img_points.setObjectName("img_points")
 
-        self.label_puntos = QtWidgets.QLabel(self.centralwidget)
-        self.label_puntos.setGeometry(QtCore.QRect(690, 50, 171, 20))
 
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_puntos.setFont(font)
-        self.label_puntos.setObjectName("label_puntos")
+        #Title gráfico puntos
         self.label_grafico = QtWidgets.QLabel(self.centralwidget)
-        self.label_grafico.setGeometry(QtCore.QRect(1070, 50, 171, 20))
-
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
+        self.label_grafico.setGeometry(QtCore.QRect(1010, 55, 171, 20))
+        self.label_grafico.setStyleSheet("color:rgb(72, 73, 75);")
         self.label_grafico.setFont(font)
         self.label_grafico.setObjectName("label_grafico")
 
+        #Button gráfico puntos expand
+        self.buttonExpandPoints = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonExpandPoints.setGeometry(QtCore.QRect(1240, 50, 25, 25))
+        #Graph points
         self.graph_puntos = QtWidgets.QLabel(self.centralwidget)
-        self.graph_puntos.setGeometry(QtCore.QRect(1020, 80, 250, 250))
+        self.graph_puntos.setGeometry(QtCore.QRect(930, 80, 340, 250))
         self.graph_puntos.setText("")
-        self.graph_puntos.setPixmap(QtGui.QPixmap("assets/img_test_detection3.jpeg"))
+        self.graph_puntos.setStyleSheet("border: 1px solid rgb(72, 73, 75);")
+        self.graph_puntos.setPixmap(QtGui.QPixmap("assets/imgGUI/graphsquare.png"))
         self.graph_puntos.setScaledContents(True)
         self.graph_puntos.setObjectName("graph_puntos")
 
-        self.subtitle = QtWidgets.QLabel(self.centralwidget)
-        self.subtitle.setGeometry(QtCore.QRect(550, 330, 171, 41))
-
+        #Font def coord
         font = QtGui.QFont()
-        font.setPointSize(18)
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(60)
+
+        #Subtitles def coord X1
+        self.label_x1 = QtWidgets.QLabel(self.centralwidget)
+        self.label_x1.setGeometry(QtCore.QRect(880, 65, 25, 20))
+        self.label_x1.setFont(font)
+        self.label_x1.setObjectName("label_x1")
+        #Form coord X1
+        self.text_x1 = QtWidgets.QTextEdit(self.centralwidget)
+        self.text_x1.setGeometry(QtCore.QRect(855, 85, 70, 31))
+        self.text_x1.setStyleSheet("font-size: 15px;")
+        self.text_x1.setObjectName("text_x1")
+        
+        #Subtitles def coord Y1
+        self.label_y1 = QtWidgets.QLabel(self.centralwidget)
+        self.label_y1.setGeometry(QtCore.QRect(880, 120, 31, 20))
+        self.label_y1.setFont(font)
+        self.label_y1.setObjectName("label_y1")
+        #Form coord Y1
+        self.text_y1 = QtWidgets.QTextEdit(self.centralwidget)
+        self.text_y1.setGeometry(QtCore.QRect(855, 140, 70, 31))
+        self.text_x1.setStyleSheet("font-size: 15px;")
+        self.text_y1.setObjectName("text_y1")
+
+        
+        #Subtitles def coord X2
+        self.label_x2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_x2.setGeometry(QtCore.QRect(880, 185, 31, 20))
+        self.label_x2.setFont(font)
+        self.label_x2.setObjectName("label_x2")
+        #Form coord X2
+        self.text_x2 = QtWidgets.QTextEdit(self.centralwidget)
+        self.text_x2.setGeometry(QtCore.QRect(855, 205, 70, 31))
+        self.text_x1.setStyleSheet("font-size: 15px;")
+        self.text_x2.setObjectName("text_x2")
+        #Subtitles def coord Y2
+        self.label_y2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_y2.setGeometry(QtCore.QRect(880, 240, 31, 20))
+        self.label_y2.setFont(font)
+        self.label_y2.setObjectName("label_y2")
+        #Form coord Y2
+        self.text_y2 = QtWidgets.QTextEdit(self.centralwidget)
+        self.text_y2.setGeometry(QtCore.QRect(855, 260, 70, 31))
+        self.text_x1.setStyleSheet("font-size: 15px;")
+        self.text_y2.setObjectName("text_y2")
+
+        
+
+
+        #Botón definir coordenadas
+        self.buttonDefine = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonDefine.setGeometry(QtCore.QRect(855, 300, 70, 31))
+        self.buttonDefine.setObjectName("buttonDefine")
+        self.buttonDefine.setStyleSheet("background:rgb(150, 150, 150);")
+
+        #Font Title Intepolacion
+        font = QtGui.QFont()
+        font.setPointSize(20)
         font.setBold(True)
         font.setWeight(75)
+
+
+        #Title interpolacion
+        self.subtitle = QtWidgets.QLabel(self.centralwidget)
+        self.subtitle.setGeometry(QtCore.QRect(550, 330, 191, 41))
+        self.subtitle.setStyleSheet("color:rgb(72, 73, 75);")
         self.subtitle.setFont(font)
         self.subtitle.setAutoFillBackground(False)
         self.subtitle.setObjectName("subtitle")
 
-        self.label_inter1 = QtWidgets.QLabel(self.centralwidget)
-        self.label_inter1.setGeometry(QtCore.QRect(130, 380, 171, 20))
 
+
+        #FOnt interpolaciones
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
         font.setWeight(75)
+
+
+        #Title interpolacion lineal
+        self.label_inter1 = QtWidgets.QLabel(self.centralwidget)
+        self.label_inter1.setGeometry(QtCore.QRect(130, 380, 171, 20))
         self.label_inter1.setFont(font)
         self.label_inter1.setObjectName("label_inter1")
 
-        self.buttonDefine = QtWidgets.QPushButton(self.centralwidget)
-        self.buttonDefine.setGeometry(QtCore.QRect(910, 300, 75, 31))
-        self.buttonDefine.setObjectName("buttonDefine")
-
-        self.interpol_1 = QtWidgets.QWidget(self.centralwidget)
+        #Img graph interpolacion lineal
+        self.interpol_1 = QtWidgets.QLabel(self.centralwidget)
         self.interpol_1.setGeometry(QtCore.QRect(10, 410, 400, 240))
         self.interpol_1.setObjectName("interpol_1")
+        self.interpol_1.setPixmap(QtGui.QPixmap("assets/imgGUI/graphsquare.png"))
+        self.interpol_1.setStyleSheet("border: 1px solid rgb(72, 73, 75);")
 
-        self.interpol_2 = QtWidgets.QWidget(self.centralwidget)
+
+
+        self.interpol_2 = QtWidgets.QLabel(self.centralwidget)
         self.interpol_2.setGeometry(QtCore.QRect(440, 410, 400, 240))
         self.interpol_2.setObjectName("interpol_2")
 
@@ -159,66 +242,11 @@ class Ui_MainWindow(object):
         self.label_inter3.setFont(font)
         self.label_inter3.setObjectName("label_inter3")
 
-        self.interpol_3 = QtWidgets.QWidget(self.centralwidget)
+        self.interpol_3 = QtWidgets.QLabel(self.centralwidget)
         self.interpol_3.setGeometry(QtCore.QRect(870, 410, 400, 240))
         self.interpol_3.setObjectName("interpol_3")
 
-        self.text_x1 = QtWidgets.QTextEdit(self.centralwidget)
-        self.text_x1.setGeometry(QtCore.QRect(900, 100, 104, 31))
-        self.text_x1.setObjectName("text_x1")
-
-        self.label_x1 = QtWidgets.QLabel(self.centralwidget)
-        self.label_x1.setGeometry(QtCore.QRect(940, 80, 31, 20))
-
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(False)
-        font.setWeight(50)
-        self.label_x1.setFont(font)
-        self.label_x1.setObjectName("label_x1")
-
-        self.text_y1 = QtWidgets.QTextEdit(self.centralwidget)
-        self.text_y1.setGeometry(QtCore.QRect(900, 150, 104, 31))
-        self.text_y1.setObjectName("text_y1")
-
-        self.label_y1 = QtWidgets.QLabel(self.centralwidget)
-        self.label_y1.setGeometry(QtCore.QRect(940, 130, 31, 20))
-
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(False)
-        font.setWeight(50)
-        self.label_y1.setFont(font)
-        self.label_y1.setObjectName("label_y1")
-
-        self.label_y2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_y2.setGeometry(QtCore.QRect(940, 240, 31, 20))
-
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(False)
-        font.setWeight(50)
-        self.label_y2.setFont(font)
-        self.label_y2.setObjectName("label_y2")
         
-        self.text_x2 = QtWidgets.QTextEdit(self.centralwidget)
-        self.text_x2.setGeometry(QtCore.QRect(900, 210, 104, 31))
-        self.text_x2.setObjectName("text_x2")
-
-        self.text_y2 = QtWidgets.QTextEdit(self.centralwidget)
-        self.text_y2.setGeometry(QtCore.QRect(900, 260, 104, 31))
-        self.text_y2.setObjectName("text_y2")
-
-        self.label_x2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_x2.setGeometry(QtCore.QRect(940, 190, 31, 20))
-
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(False)
-        font.setWeight(50)
-        self.label_x2.setFont(font)
-        self.label_x2.setObjectName("label_x2")
-
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -238,7 +266,8 @@ class Ui_MainWindow(object):
         self.actionLoad_Image = QtWidgets.QAction(MainWindow)
         self.actionLoad_Image.setObjectName("actionLoad_Image")
         self.menuArchivo.addAction(self.actionLoad_Image)
-        #
+
+        
         self.menubar.addAction(self.menuArchivo.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -249,16 +278,17 @@ class Ui_MainWindow(object):
 
         #Load Image
         self.actionLoad_Image.triggered.connect(self.loadImage)
-        
-
-
+        #PressButton procesar
+        self.buttonProcess.clicked.connect(self.processImage)
+        #PressButton Define points
+        self.buttonDefine.clicked.connect(self.calcPoints)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.title.setText(_translate("MainWindow", "Proyecto métodos 2021-I"))
         self.label_original.setText(_translate("MainWindow", "Imagen original"))
-        self.buttonProcess.setText(_translate("MainWindow", "Procesar imagen"))
+        self.buttonProcess.setText(_translate("MainWindow", "Procesar \n Imagen"))
         self.label_hsv.setText(_translate("MainWindow", "Imagen BGR2HSV"))
         self.label_puntos.setText(_translate("MainWindow", "Puntos a interpolar"))
         self.label_grafico.setText(_translate("MainWindow", "Gráfico de puntos"))
@@ -267,21 +297,30 @@ class Ui_MainWindow(object):
         self.buttonDefine.setText(_translate("MainWindow", "Definir coord"))
         self.label_inter2.setText(_translate("MainWindow", "Interpolación lineal"))
         self.label_inter3.setText(_translate("MainWindow", "Interpolación por splines"))
-        self.label_x1.setText(_translate("MainWindow", "x1:"))
-        self.label_y1.setText(_translate("MainWindow", "y1:"))
-        self.label_y2.setText(_translate("MainWindow", "y2:"))
-        self.label_x2.setText(_translate("MainWindow", "x2:"))
+        self.label_x1.setText(_translate("MainWindow", "X1:"))
+        self.label_y1.setText(_translate("MainWindow", "Y1:"))
+        self.label_x2.setText(_translate("MainWindow", "X2:"))
+        self.label_y2.setText(_translate("MainWindow", "Y2:"))
         self.menuArchivo.setTitle(_translate("MainWindow", "File"))
         self.actionLoad_Image.setText(_translate("MainWindow", "Load Image"))
-    
+        #Buttons expand
+        pixmap = QPixmap("assets/imgGUI/expand.png")
+        self.buttonExpandPoints.setIcon(QIcon(pixmap))
     #Methods
     def loadImage(self):
         imagePath, _ = QFileDialog.getOpenFileName()
         pixmap = QPixmap(imagePath)
         self.img_original.setPixmap(pixmap)
-        print(imagePath)
         getPointsCV2.getPointsImage(imagePath)
 
+    def processImage(self):
+        pixmap = QPixmap("assets/imgMod/hsv.jpeg")
+        self.img_hsv.setPixmap(pixmap)
+        pixmap = QPixmap("assets/imgMod/points.jpeg")
+        self.img_points.setPixmap(pixmap)
+
+    def calcPoints(self):
+        print("Mamarre")
         
 
 if __name__ == "__main__":
