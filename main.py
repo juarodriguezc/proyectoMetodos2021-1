@@ -3,8 +3,11 @@ import cv2
 import matplotlib.pyplot as plt
 import VectorToPolinomio as VTP
 
+from operator import itemgetter
+
 #Load image from assets
-img = cv2.imread('assets/test_graph.JPG' , -1)
+#img = cv2.imread('assets/test_graph.JPG' , -1)
+img = cv2.imread('assets/img_test_detection2.jpeg' , -1)
     #-1, IMREAD_COLOR: Color image mode No transparent
     #0, IMREAD_FRAYSCALE: Grayscale mode
     #1, IMREAD_UNCHANGED: Color image Transparent background
@@ -76,29 +79,57 @@ x1 = min_value[0]
 y1 = min_value[1]
 
 #Xt1, Yt1
-xt1 = 1
-yt1 = 1
+xt1 = -1
+yt1 = 5
 
 #X2,Y2
 x2 = max_value[0]
 y2 = max_value[1]
 
 #Xt2, Yt2
-xt2 = -1
-yt2 = 5
+xt2 = 1
+yt2 = 7
+
+minX = min(xt1,xt2)
+maxX = max(xt1,xt2)
+minY = min(yt1,yt2)
+maxY = max(yt1,yt2)
+
+print("minX: ",minX, " minY: ",minY)
+print("maxX: ",maxX, " maxY: ",maxY)
+
+difX = (maxX-minX)/(abs(x2-x1))
+difY = (maxY-minY)/(abs(y2-y1))
 
 
-points_array =  (points_array[::20])
+minX2 = min(x1,x2)
+minY2 = min(y1,y2)
+
+
+
+print(difX)
+print(difY)
+
+
+points_array =  (points_array[20:680:40])
 point_transform = []
+point_transform.append((xt1,yt1))
+point_transform.append((xt2,yt2))
+
+
+
 for point in points_array:
     x = point[0]
     y = point[1]
     #Calc linear transformation
     #calc x
-    Lx = xt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + xt2*((x1*y-x*y1)/(x1*y2-x2*y1))
+    #Lx = xt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + xt2*((x1*y-x*y1)/(x1*y2-x2*y1))
     #Calc y
-    Ly = yt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + yt2*((x1*y-x*y1)/(x1*y2-x2*y1))
+    #Ly = yt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + yt2*((x1*y-x*y1)/(x1*y2-x2*y1))
+    
 
+    Lx = minX + (difX)*(x-minX2)
+    Ly = minY + (difY)*(y-minY2)
 
     print("Lx: ",Lx,"  Ly: ",Ly)
     point_transform.append((Lx,Ly))
@@ -106,17 +137,17 @@ for point in points_array:
 
 
 
-
+point_transform2 = point_transform.sort(key=itemgetter(0))
 
 x_val = [x[0] for x in point_transform]
 y_val = [x[1] for x in point_transform]
-plt.plot(x_val,y_val)
+
 plt.plot(x_val,y_val,'o')
 plt.show()
 
 x_val = [x[0] for x in points_array]
 y_val = [x[1] for x in points_array]
-plt.plot(x_val,y_val)
+
 plt.plot(x_val,y_val,'o')
 plt.show()
 
