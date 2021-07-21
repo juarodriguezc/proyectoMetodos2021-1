@@ -14,7 +14,9 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QFileDialog, QAction
 from PyQt5.QtGui import QIcon, QPixmap
-
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvasQTAgg
 import getPointsCV2
 
 class Ui_MainWindow(object):
@@ -248,6 +250,9 @@ class Ui_MainWindow(object):
 
         
 
+
+        #TOp bar
+
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -272,7 +277,13 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
+        #test matplot
+
+      
+
+
+
+
 
         #Actions
 
@@ -282,6 +293,8 @@ class Ui_MainWindow(object):
         self.buttonProcess.clicked.connect(self.processImage)
         #PressButton Define points
         self.buttonDefine.clicked.connect(self.calcPoints)
+        #PressButton Plot Points
+        self.buttonExpandPoints.clicked.connect(self.expandPlotPoints)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -321,7 +334,11 @@ class Ui_MainWindow(object):
 
     def calcPoints(self):
         print("Mamarre")
-        
+    
+    def expandPlotPoints(self):
+        plt.plot()
+        plt.show()
+
 
 if __name__ == "__main__":
     import sys

@@ -49,6 +49,7 @@ def getPointsImage(imagePath):
         list_points.append(point)
     #Save the image with points in files
     cv2.imwrite('assets/imgMod/points.jpeg',img_points)
+    print(list_points)
     return True
 
     

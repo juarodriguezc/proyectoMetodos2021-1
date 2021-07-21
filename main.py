@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import VectorToPolinomio as VTP
 
 #Load image from assets
-img = cv2.imread('assets/img_test_detection3.jpeg' , -1)
+img = cv2.imread('assets/test_graph.JPG' , -1)
     #-1, IMREAD_COLOR: Color image mode No transparent
     #0, IMREAD_FRAYSCALE: Grayscale mode
     #1, IMREAD_UNCHANGED: Color image Transparent background
@@ -49,19 +49,74 @@ for j in range (x_border,width-x_border):
 points_array = np.array(points)
 list_points = []
 img_points = img
-for point in (points_array[::30]):
+for point in (points_array[::]):
     img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
     list_points.append(point)
+
+
+
 cv2.imshow('Image' , img_points)
 cv2. waitKey(0)
 cv2.destroyAllWindows()
 
+#Transform to graph form
+points_array[:,1] =  (points_array[:,1] *-1)+height
 
-plt.imshow(mask)
+
+min_value = points_array[np.argmin(points_array[:,1])]
+max_value = points_array[np.argmax(points_array[:,1])]
+
+
+
+
+#Linear transformation using this 2 points as ref
+
+#X1,Y1
+x1 = min_value[0]
+y1 = min_value[1]
+
+#Xt1, Yt1
+xt1 = 1
+yt1 = 1
+
+#X2,Y2
+x2 = max_value[0]
+y2 = max_value[1]
+
+#Xt2, Yt2
+xt2 = -1
+yt2 = 5
+
+
+points_array =  (points_array[::20])
+point_transform = []
+for point in points_array:
+    x = point[0]
+    y = point[1]
+    #Calc linear transformation
+    #calc x
+    Lx = xt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + xt2*((x1*y-x*y1)/(x1*y2-x2*y1))
+    #Calc y
+    Ly = yt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + yt2*((x1*y-x*y1)/(x1*y2-x2*y1))
+
+
+    print("Lx: ",Lx,"  Ly: ",Ly)
+    point_transform.append((Lx,Ly))
+
+
+
+
+
+
+x_val = [x[0] for x in point_transform]
+y_val = [x[1] for x in point_transform]
+plt.plot(x_val,y_val)
+plt.plot(x_val,y_val,'o')
 plt.show()
 
-plt.plot((points_array[::30,1]),'o')
+x_val = [x[0] for x in points_array]
+y_val = [x[1] for x in points_array]
+plt.plot(x_val,y_val)
+plt.plot(x_val,y_val,'o')
 plt.show()
 
-plt.plot()
-plt.show()

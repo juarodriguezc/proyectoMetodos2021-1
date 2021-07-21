@@ -21,3 +21,6 @@ def polinomial(puntos):
     for i in range(len(r)):
         rarray.append(round(r[i][0], 5))
     return(VTP.vtp(rarray))
+
+
+    
