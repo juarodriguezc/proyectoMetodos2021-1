@@ -5,7 +5,7 @@ def getPointsImage(imagePath):
     #Set width and height of the image
     width = 700
     height = 700
-    #Set border 
+    #Set border
     x_border = 20
     y_border = 20
     #Load image from imagePath
@@ -63,5 +63,5 @@ def getPointsImage(imagePath):
     print(list_points)
     return points_array
 
-    
+
 
