@@ -20,7 +20,11 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import getPointsCV2
 
 class Ui_MainWindow(object):
+    #Points from image
+    points = []
+    final_points = []
     def setupUi(self, MainWindow):
+        #Setup window
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         MainWindow.setAutoFillBackground(False)
@@ -42,6 +46,8 @@ class Ui_MainWindow(object):
         self.title.setFont(font)
         self.title.setAutoFillBackground(False)
         self.title.setObjectName("title")
+
+        
 
 
 
@@ -324,16 +330,25 @@ class Ui_MainWindow(object):
         imagePath, _ = QFileDialog.getOpenFileName()
         pixmap = QPixmap(imagePath)
         self.img_original.setPixmap(pixmap)
-        getPointsCV2.getPointsImage(imagePath)
+        self.points = getPointsCV2.getPointsImage(imagePath)
 
     def processImage(self):
-        pixmap = QPixmap("assets/imgMod/hsv.jpeg")
-        self.img_hsv.setPixmap(pixmap)
-        pixmap = QPixmap("assets/imgMod/points.jpeg")
-        self.img_points.setPixmap(pixmap)
+        if (type(self.points) is list):
+            pixmap = QPixmap("assets/imgGUI/error_load.png")
+            self.img_hsv.setPixmap(pixmap)
+            pixmap = QPixmap("assets/imgGUI/error_load.png")
+            self.img_points.setPixmap(pixmap)
+        else:
+            pixmap = QPixmap("assets/imgMod/hsv.jpeg")
+            self.img_hsv.setPixmap(pixmap)
+            pixmap = QPixmap("assets/imgMod/points.jpeg")
+            self.img_points.setPixmap(pixmap)
 
     def calcPoints(self):
-        print("Mamarre")
+        if (self.text_x1.toPlainText() == "" or self.text_y1.toPlainText() == "" or self.text_x2.toPlainText() == "" or self.text_y2.toPlainText() == "" ):
+            print("Familia NO hay puntos")
+        else:
+            print("Familia hay puntos")
     
     def expandPlotPoints(self):
         plt.plot()

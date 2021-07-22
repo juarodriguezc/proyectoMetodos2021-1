@@ -42,15 +42,26 @@ def getPointsImage(imagePath):
             points.append((x_array[0],x_array[1]))
     #Now the list points has the values of the graph
     points_array = np.array(points)
-    list_points = []
+    #Create image
     img_points = image
+    #Get the greater and the lower points in Y
+    min_value = points_array[np.argmin(points_array[:,1])]
+    max_value = points_array[np.argmax(points_array[:,1])]
+    list_points = []
     for point in (points_array[::30]):
         img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
         list_points.append(point)
+    #Draw the greater and lower points
+    img_points = cv2.circle(img_points, min_value, 20, (255,0,255), -1)
+    img_points = cv2.circle(img_points, max_value, 20, (255,0,255), -1)
+    #Write text points
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    img_points = cv2.putText(img_points, 'P1',(min_value[0]-50,min_value[1]),font,1.5, (0,0,0), 3, cv2.LINE_AA)
+    img_points = cv2.putText(img_points, 'P2',(max_value[0],max_value[1]+50),font,1.5, (0,0,0), 3, cv2.LINE_AA)
     #Save the image with points in files
     cv2.imwrite('assets/imgMod/points.jpeg',img_points)
     print(list_points)
-    return True
+    return points_array
 
     
 
