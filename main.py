@@ -14,7 +14,7 @@ img = cv2.imread('assets/img_test_detection2.jpeg' , -1)
 #Seet width and height
 width = 700
 height = 700
-#Create border 
+#Create border
 x_border = 20
 y_border = 20
 #Resize the image
@@ -126,7 +126,7 @@ for point in points_array:
     #Lx = xt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + xt2*((x1*y-x*y1)/(x1*y2-x2*y1))
     #Calc y
     #Ly = yt1*((x*y2-x2*y)/(x1*y2-x2*y1)) + yt2*((x1*y-x*y1)/(x1*y2-x2*y1))
-    
+
 
     Lx = minX + (difX)*(x-minX2)
     Ly = minY + (difY)*(y-minY2)
