@@ -7,7 +7,7 @@ from sympy import *
 #puntos = [[0, 1], [1, 3], [2, 0], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
 
 x = Symbol('x')
-puntos = [[1, 10], [2, 5], [5, 2], [10, 1]]
+puntos = [(-1, 5), (-0.850187265917603, 4.4878892733564015), (-0.02621722846441943, 2.093425605536332), (0.797752808988764, 1.055363321799308), (1, 1), (1.6217228464419478, 1.3667820069204153), (2.445692883895131, 3.0346020761245676)]
 
 polP = pol.polinomial(puntos)
 lagP = lge.lagrange(puntos)
@@ -27,5 +27,5 @@ for i in range(len(ecspl)):
         plt.plot(x2, fnt(x2), color = "g", label = "Splines")
     else:
         plt.plot(x2, fnt(x2), color = "g")
-plt.legend()
+#plt.legend()
 plt.show()

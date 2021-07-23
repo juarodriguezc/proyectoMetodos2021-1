@@ -1,4 +1,4 @@
-import interpolinomial as pol
+import interLagrange as lag
 import VectorToPolinomio as VTP
 import numpy as np
 from numpy import *
@@ -79,7 +79,7 @@ def splines(puntos):
     for i in range(longitud - 2):
         solucion.append([0])
         solucion.append([0])
-    polinomio = pol.polinomial(puntos)
+    polinomio = lag.lagrange(puntos)
     derivado = diff(polinomio, x)
     p0 = derivado.evalf(subs = {x:puntos[0][0]})
     p1 = derivado.evalf(subs = {x:puntos[longitud - 1][0]})
