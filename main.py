@@ -6,8 +6,8 @@ import VectorToPolinomio as VTP
 from operator import itemgetter
 
 #Load image from assets
-#img = cv2.imread('assets/test_graph.JPG' , -1)
-img = cv2.imread('assets/img_test_detection2.jpeg' , -1)
+img = cv2.imread('assets/test_graph.JPG' , -1)
+#img = cv2.imread('assets/img_test_detection2.jpeg' , -1)
     #-1, IMREAD_COLOR: Color image mode No transparent
     #0, IMREAD_FRAYSCALE: Grayscale mode
     #1, IMREAD_UNCHANGED: Color image Transparent background
@@ -79,16 +79,16 @@ x1 = min_value[0]
 y1 = min_value[1]
 
 #Xt1, Yt1
-xt1 = -1
-yt1 = 5
+xt1 = 1
+yt1 = 1
 
 #X2,Y2
 x2 = max_value[0]
 y2 = max_value[1]
 
 #Xt2, Yt2
-xt2 = 1
-yt2 = 7
+xt2 = -1
+yt2 = 5
 
 minX = min(xt1,xt2)
 maxX = max(xt1,xt2)
@@ -111,7 +111,7 @@ print(difX)
 print(difY)
 
 
-points_array =  (points_array[20:680:40])
+points_array =  (points_array[20:680:110])
 point_transform = []
 point_transform.append((xt1,yt1))
 point_transform.append((xt2,yt2))
@@ -131,17 +131,18 @@ for point in points_array:
     Lx = minX + (difX)*(x-minX2)
     Ly = minY + (difY)*(y-minY2)
 
-    print("Lx: ",Lx,"  Ly: ",Ly)
+    #print("Lx: ",Lx,"  Ly: ",Ly)
     point_transform.append((Lx,Ly))
 
 
 
 
-point_transform2 = point_transform.sort(key=itemgetter(0))
+point_transform.sort(key=itemgetter(0))
+print(point_transform)
 
 x_val = [x[0] for x in point_transform]
 y_val = [x[1] for x in point_transform]
-
+plt.plot(x_val,y_val)
 plt.plot(x_val,y_val,'o')
 plt.show()
 

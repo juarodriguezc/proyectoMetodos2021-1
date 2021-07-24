@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from operator import itemgetter
 
 def getPointsImage(imagePath):
     #Set width and height of the image
@@ -40,6 +41,8 @@ def getPointsImage(imagePath):
         if(len(x_point)>0):
             x_array = np.mean(x_point,axis=0 ,dtype=np.int32)
             points.append((x_array[0],x_array[1]))
+    if len(points) == 0:
+        return False
     #Now the list points has the values of the graph
     points_array = np.array(points)
     #Create image
@@ -52,6 +55,9 @@ def getPointsImage(imagePath):
         img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
         list_points.append(point)
     #Draw the greater and lower points
+    list_points.append(min_value)
+    list_points.append(max_value)
+    list_points.sort(key=itemgetter(0))
     img_points = cv2.circle(img_points, min_value, 20, (255,0,255), -1)
     img_points = cv2.circle(img_points, max_value, 20, (255,0,255), -1)
     #Write text points
@@ -61,7 +67,7 @@ def getPointsImage(imagePath):
     #Save the image with points in files
     cv2.imwrite('assets/imgMod/points.jpeg',img_points)
     print(list_points)
-    return points_array
+    return list_points
 
     
 
