@@ -14,25 +14,32 @@ class Canvas(FigureCanvas):
         fig, self.ax = plt.subplots(figsize=(5,3))
         super().__init__(fig)
         self.setParent(parent)
-        
-        self.ax.grid()
+        self.ax.set(xlim=(0,600), ylim=(0,600))
 
     def graphPoints(self):
-        self.ax.clear()
-        t = np.arange(0.0, 2.0, 0.01)
-        s = 1 + np.sin(2 * np.pi * t)
-        
-        self.ax.plot(t, s)
+        print("xdddd")
 
-        self.ax.set(xlabel='time (s)', ylabel='voltage (mV)',
-               title='About as simple as it gets, folks')
+    def updateGraphPonts(self, points, menor, mayor, nPoints):
+        self.ax.clear()
         self.ax.grid()
+        distY = int((mayor[1] - menor[1])/10)
+        xmin = points[0][0]
+        xmax = points[len(points)-1][0]
+        distX = int((xmax - xmin)/10)
+        self.ax.set(xlim=(xmin-distX,xmax+distX), ylim=(menor[1]-distY,mayor[1]+distY))
+        x_val = [x[0] for x in points]
+        y_val = [x[1] for x in points]
+        self.ax.plot(x_val,y_val,'o')
+        
 
 
 class Ui_MainWindow(object):
     #Points from image
     points = []
     final_points = []
+    nPoints = 6
+    mayor = ()
+    menor = ()
     def setupUi(self, MainWindow):
         #Setup window
         MainWindow.setObjectName("MainWindow")
@@ -108,7 +115,7 @@ class Ui_MainWindow(object):
 
         #Title Puntos
         self.label_puntos = QtWidgets.QLabel(self.centralwidget)
-        self.label_puntos.setGeometry(QtCore.QRect(580, 55, 180, 20))
+        self.label_puntos.setGeometry(QtCore.QRect(560, 55, 250, 20))
         self.label_puntos.setStyleSheet("color:rgb(72, 73, 75);")
         self.label_puntos.setFont(font)
         self.label_puntos.setObjectName("label_puntos")
@@ -324,7 +331,7 @@ class Ui_MainWindow(object):
         self.title.setText(_translate("MainWindow", "Proyecto métodos 2021-I"))
         self.label_original.setText(_translate("MainWindow", "Imagen original"))
         self.label_hsv.setText(_translate("MainWindow", "Imagen BGR2HSV"))
-        self.label_puntos.setText(_translate("MainWindow", "Puntos a interpolar"))
+        self.label_puntos.setText(_translate("MainWindow", "Puntos encontrados: ",))
         self.label_grafico.setText(_translate("MainWindow", "Gráfico de puntos"))
         self.subtitle.setText(_translate("MainWindow", "Interpolación"))
         self.label_inter1.setText(_translate("MainWindow", "Interpolación lineal"))
@@ -354,8 +361,8 @@ class Ui_MainWindow(object):
         self.img_points.setPixmap(pixmap)
         #Get image path
         imagePath, _ = QFileDialog.getOpenFileName()
-        self.points = getPointsCV2.getPointsImage(imagePath)
-        print("Self: ", type(self.points))
+        #Get points, mayor y menor
+        self.points, self.menor, self.mayor = getPointsCV2.getPointsImage(imagePath)
         if (type(self.points) is list):
             #Load image
             pixmap = QPixmap(imagePath)
@@ -364,6 +371,7 @@ class Ui_MainWindow(object):
             self.img_hsv.setPixmap(pixmap)
             pixmap = QPixmap("assets/imgMod/points.jpeg")
             self.img_points.setPixmap(pixmap)
+            self.label_puntos.setText("Puntos encontrados:  " + str(len(self.points)))
         else:
             pixmap = QPixmap("assets/imgGUI/error_load.png")
             self.img_original.setPixmap(pixmap)
@@ -372,21 +380,21 @@ class Ui_MainWindow(object):
             pixmap = QPixmap("assets/imgGUI/error_load.png")
             self.img_points.setPixmap(pixmap)
 
-    def processImage(self):
-        print("inutil")
-
     def calcPoints(self):
         if (self.text_x1.toPlainText() == "" or self.text_y1.toPlainText() == "" or self.text_x2.toPlainText() == "" or self.text_y2.toPlainText() == "" ):
-            print("Mamarre")
-            self.chart_points = self.chart_points.graphPoints()
+            self.chart_points.updateGraphPonts(self.points,self.menor,self.mayor,len(self.points))
+            self.chart_points.draw()
         else:
             print("Familia hay puntos")
+        if(self.text_npoints.toPlainText() == "" or (int(self.text_npoints.toPlainText())<4 or int(self.text_npoints.toPlainText())>16)):
+            self.nPoints = 6
+        else:
+            self.nPoints = int(self.text_npoints.toPlainText())
+        
         
     
     def expandPlotPoints(self):
-        plt.figure(2)
-        plt.plot()
-        plt.show()
+        print("Graph")
 
 
 if __name__ == "__main__":

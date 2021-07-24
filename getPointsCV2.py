@@ -53,11 +53,8 @@ def getPointsImage(imagePath):
     list_points = []
     for point in (points_array[::30]):
         img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
-        list_points.append(point)
+        list_points.append((point[0],point[1]))
     #Draw the greater and lower points
-    list_points.append(min_value)
-    list_points.append(max_value)
-    list_points.sort(key=itemgetter(0))
     img_points = cv2.circle(img_points, min_value, 20, (255,0,255), -1)
     img_points = cv2.circle(img_points, max_value, 20, (255,0,255), -1)
     #Write text points
@@ -66,8 +63,23 @@ def getPointsImage(imagePath):
     img_points = cv2.putText(img_points, 'P2',(max_value[0],max_value[1]+50),font,1.5, (0,0,0), 3, cv2.LINE_AA)
     #Save the image with points in files
     cv2.imwrite('assets/imgMod/points.jpeg',img_points)
-    print(list_points)
-    return list_points
+    #Add min and max to the list_points
+    list_points.append((min_value[0],min_value[1]))
+    list_points.append((max_value[0],max_value[1]))
+    #Remove repeated elements
+    list_points = list(dict.fromkeys(list_points))
+    #Sort list
+    list_points.sort(key=itemgetter(0))
+    #Create numpy array
+    points_array = np.array(list_points)
+    #Transform to x,y form
+    points_array[:,1] =  (points_array[:,1] *-1)+height
+    #Transform to list form
+    list_points = points_array.tolist()
+    #Return list, minpoint, maxpoint
+    return list_points, ((max_value[0],(max_value[1]*-1)+height)), ((min_value[0],(min_value[1]*-1)+height))
 
+def transformPoints(points, smaller, bigger):
+    print("listo")
 
 
