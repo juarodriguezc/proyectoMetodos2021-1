@@ -13,7 +13,7 @@ def getPointsImage(imagePath):
     image = cv2.imread(imagePath , -1)
     #Check if imagePath is correct
     if image is None:
-        return False
+        return False, 0, 0
     #Create HSV image and save in files
     image = cv2.resize(image,(width,height))
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -42,7 +42,7 @@ def getPointsImage(imagePath):
             x_array = np.mean(x_point,axis=0 ,dtype=np.int32)
             points.append((x_array[0],x_array[1]))
     if len(points) == 0:
-        return False
+        return False, 0, 0
     #Now the list points has the values of the graph
     points_array = np.array(points)
     #Create image
@@ -50,13 +50,14 @@ def getPointsImage(imagePath):
     #Get the greater and the lower points in Y
     min_value = points_array[np.argmin(points_array[:,1])]
     max_value = points_array[np.argmax(points_array[:,1])]
-    list_points = []
-    for point in (points_array[::30]):
-        img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
-        list_points.append((point[0],point[1]))
     #Draw the greater and lower points
     img_points = cv2.circle(img_points, min_value, 20, (255,0,255), -1)
     img_points = cv2.circle(img_points, max_value, 20, (255,0,255), -1)
+    list_points = []
+    for point in (points_array[::20]):
+        img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
+        list_points.append((point[0],point[1]))
+    
     #Write text points
     font = cv2.FONT_HERSHEY_SIMPLEX
     img_points = cv2.putText(img_points, 'P1',(min_value[0]-50,min_value[1]),font,1.5, (0,0,0), 3, cv2.LINE_AA)
@@ -79,7 +80,46 @@ def getPointsImage(imagePath):
     #Return list, minpoint, maxpoint
     return list_points, ((max_value[0],(max_value[1]*-1)+height)), ((min_value[0],(min_value[1]*-1)+height))
 
-def transformPoints(points, smaller, bigger):
-    print("listo")
+def transformPoints(points, smaller, bigger, rSmaller, rBigger):
+    #Linear transformation using this 2 points as ref
+    #X1,Y1
+    x1 = smaller[0]
+    y1 = smaller[1]
+    #Xt1, Yt1
+    xt1 = rSmaller[0]
+    yt1 = rSmaller[1]
+
+    #X2,Y2
+    x2 = bigger[0]
+    y2 = bigger[1]
+    #Xt2, Yt2
+    xt2 = rBigger[0]
+    yt2 = rBigger[1]
+    #Find min and max point
+    minX = min(xt1,xt2)
+    maxX = max(xt1,xt2)
+    minY = min(yt1,yt2)
+    maxY = max(yt1,yt2)
+    #Calc difX and difY
+    difX = (maxX-minX)/(abs(x2-x1))
+    difY = (maxY-minY)/(abs(y2-y1))
+    #Calc minX2 minY2
+    minX2 = min(x1,x2)
+    minY2 = min(y1,y2)
+    #Create numpy array
+    points_array = np.array(points)
+    point_transform = []
+    point_transform.append((xt1,yt1))
+    point_transform.append((xt2,yt2))
+    #Transform elements
+    for point in points_array:
+        x = point[0]
+        y = point[1]
+        Lx = minX + (difX)*(x-minX2)
+        Ly = minY + (difY)*(y-minY2)
+        point_transform.append((Lx,Ly))
+    point_transform.sort(key=itemgetter(0))
+    point_transform = list(dict.fromkeys(point_transform))
+    return point_transform
 
 
