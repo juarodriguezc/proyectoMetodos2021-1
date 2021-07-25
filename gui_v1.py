@@ -209,7 +209,7 @@ class Ui_MainWindow(object):
         self.buttonDefine = QtWidgets.QPushButton(self.centralwidget)
         self.buttonDefine.setGeometry(QtCore.QRect(805, 300, 60, 40))
         self.buttonDefine.setObjectName("buttonDefine")
-        self.buttonDefine.setStyleSheet("background:rgb(72, 73, 75); color:rgb(255,255,255);")
+        self.buttonDefine.setStyleSheet("background-color:rgb(102, 103, 105); color:rgb(255,255,255);")
 
 
 
@@ -303,19 +303,19 @@ class Ui_MainWindow(object):
         #Form undergraph
         #Form equation 1
         self.text_eq1 = QtWidgets.QTextEdit(self.centralwidget)
-        self.text_eq1.setGeometry(QtCore.QRect(20, 640, 400, 31))
+        self.text_eq1.setGeometry(QtCore.QRect(20, 645, 400, 30))
         self.text_eq1.setStyleSheet("font-size: 15px; background:rgb(255, 255, 255);")
         self.text_eq1.setObjectName("text_eq1")
 
         #Form equation 2
         self.text_eq2 = QtWidgets.QTextEdit(self.centralwidget)
-        self.text_eq2.setGeometry(QtCore.QRect(440, 640, 400, 31))
+        self.text_eq2.setGeometry(QtCore.QRect(440, 645, 400, 30))
         self.text_eq2.setStyleSheet("font-size: 15px; background:rgb(255, 255, 255);")
         self.text_eq2.setObjectName("text_eq2")
 
         #Form equation 3
         self.text_eq3 = QtWidgets.QTextEdit(self.centralwidget)
-        self.text_eq3.setGeometry(QtCore.QRect(860, 640, 400, 31))
+        self.text_eq3.setGeometry(QtCore.QRect(860, 645, 400, 30))
         self.text_eq3.setStyleSheet("font-size: 15px; background:rgb(255, 255, 255);")
         self.text_eq3.setObjectName("text_eq3")
         
@@ -323,29 +323,28 @@ class Ui_MainWindow(object):
         #Button procesar interpolaciones
         self.buttonProcessInterpol = QtWidgets.QPushButton(self.centralwidget)
         self.buttonProcessInterpol.setGeometry(QtCore.QRect(710, 332, 30, 30))
-        self.buttonProcessInterpol.setStyleSheet("background-color:rgb(72, 73, 75);")
+        self.buttonProcessInterpol.setStyleSheet("background-color:rgb(102, 103, 105);")
         self.buttonProcessInterpol.setObjectName("buttonProcessInterpol")
 
 
 
-        #TOp bar
-
+       
+        #Set MainWindow
         MainWindow.setCentralWidget(self.centralwidget)
 
+
+        #Top menubat
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 21))
         self.menubar.setStyleSheet("background-color:rgb(102, 103, 105); color:rgb(255,255,255);")
         self.menubar.setObjectName("menubar")
-
+        #Menu archivo
         self.menuArchivo = QtWidgets.QMenu(self.menubar)
         self.menuArchivo.setObjectName("menuArchivo")
-        
+        #Add menubar to mainWindow
         MainWindow.setMenuBar(self.menubar)
 
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
         
-        MainWindow.setStatusBar(self.statusbar)
 
         #Load Image
         self.actionLoad_Image = QtWidgets.QAction(MainWindow)
@@ -355,6 +354,8 @@ class Ui_MainWindow(object):
         
         self.menubar.addAction(self.menuArchivo.menuAction())
 
+
+        #Lines that start all
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -367,6 +368,8 @@ class Ui_MainWindow(object):
         self.buttonDefine.clicked.connect(self.calcPoints)
         #PressButton Plot Points
         self.buttonExpandPoints.clicked.connect(self.expandPlotPoints)
+        #Process Interpolacion
+        self.buttonProcessInterpol.clicked.connect(self.processInterpolation)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -429,6 +432,7 @@ class Ui_MainWindow(object):
             pixmap = QPixmap("assets/imgGUI/error_load.png")
             self.img_points.setPixmap(pixmap)
 
+    #Calculate points to graph
     def calcPoints(self): 
         if (type(self.points) is list and len(self.points)>0): 
             self.mayorFinal = self.mayor
@@ -464,7 +468,29 @@ class Ui_MainWindow(object):
         else:
             self.chart_points.cleanGraph()
             self.chart_points.draw()
-        
+    
+    def processInterpolation(self):
+        if (type(self.final_points) is list and len(self.final_points)>0): 
+            #Interpol 1
+            self.chart_interpol1.updateGraphPonts(self.final_points,self.menorFinal, self.mayorFinal)
+            self.chart_interpol1.draw()
+            self.text_eq1.setText("asdasd")
+            #Interpol 2
+            self.chart_interpol2.updateGraphPonts(self.final_points,self.menorFinal, self.mayorFinal)
+            self.chart_interpol2.draw()
+            #Interpol 3
+            self.chart_interpol3.updateGraphPonts(self.final_points,self.menorFinal, self.mayorFinal)
+            self.chart_interpol3.draw()
+        else:
+            #Interpol 1
+            self.chart_interpol1.cleanGraph()
+            self.chart_interpol1.draw()
+            #Interpol 2
+            self.chart_interpol2.cleanGraph()
+            self.chart_interpol2.draw()
+            #Interpol 3
+            self.chart_interpol3.cleanGraph()
+            self.chart_interpol3.draw()
         
     
     def expandPlotPoints(self):
