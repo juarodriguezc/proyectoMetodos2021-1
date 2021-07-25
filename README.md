@@ -11,6 +11,7 @@ python proyectoGUI.py
 
 ## Autores
 Nicolás Darío Mejía Borda
+
 Juan Sebastián Rodríguez Castellanos
 
 ## Universidad Nacional de Colombia
