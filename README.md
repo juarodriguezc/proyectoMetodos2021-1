@@ -1,6 +1,6 @@
 # ProyectoMetodos2021-1  -  Interpolador por imagen
 
-##Project setup
+## Project setup
 ```
 pip install -r requirements.txt
 ```
@@ -9,4 +9,4 @@ pip install -r requirements.txt
 Nicolás Darío Mejía Borda
 Juan Sebastián Rodríguez Castellanos
 
-##Universidad Nacional de Colombia
+## Universidad Nacional de Colombia
