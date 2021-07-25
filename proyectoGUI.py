@@ -6,40 +6,103 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QFileDialog, QAction, QWidget
 from PyQt5.QtGui import QIcon, QPixmap
 import math
+import random
+
 #Our files
 import getPointsCV2
+import interpolinomial as pol
+import interLagrange as lge
+import intersplines as spl
+
+#Simpy
+from sympy import lambdify, Symbol
 
 class Canvas(FigureCanvas):
+    rgb = []
     def __init__(self, parent):
         fig, self.ax = plt.subplots(figsize=(5,3))
         super().__init__(fig)
         self.setParent(parent)
         self.ax.grid()
         self.ax.set(xlim=(0,800), ylim=(0,800))
-
+        for i in range (50):
+            self.rgb.append((random.randint(50,200)/255,random.randint(50,200)/255,random.randint(50,200)/255))
     def cleanGraph(self):
         self.ax.clear()
         self.ax.grid()
         self.ax.set(xlim=(0,800), ylim=(0,800))
 
-    def updateGraphPonts(self, points, menor, mayor):
+    def updateGraphPonts(self, points):
         #Clear graph
         self.ax.clear()
         self.ax.grid()
-        #Calc difY
-        distY = math.ceil((mayor[1] - menor[1])/len(points))
-        #Calc difX
-        xmin = points[0][0]
-        xmax = points[len(points)-1][0]
-        distX = math.ceil((xmax - xmin)/len(points))
-        #Re set plot settings
-        self.ax.set(xlim=(xmin-distX,xmax+distX), ylim=(menor[1]-distY,mayor[1]+distY))
         #Graph the points
         x_val = [x[0] for x in points]
         y_val = [x[1] for x in points]
         self.ax.plot(x_val,y_val,'o')
-        
+        self.ax.autoscale_view()
+    
+    def updateGraphInter1(self, points, visible, function, x1, polP):
+        #Clear graph
+        self.ax.clear()
+        self.ax.grid()
+        if(visible == True):
+            #Graph the points
+            x_val = [x[0] for x in points]
+            y_val = [x[1] for x in points]
+            self.ax.plot(x_val,y_val,'o', color='orange')
+        # Data for plotting
+        self.ax.plot(x1, function(x1), color='tab:green')
+        self.ax.autoscale_view()
+        # Text to print
+        func = str(polP).replace("**", "^")
+        msg1 = "Function({} ,{} ,{} )".format(func,points[0][0],points[len(points)-1][0])
+        return msg1
 
+
+    def updateGraphInter2(self, points, visible, function, x1, lagP):
+        #Clear graph
+        self.ax.clear()
+        self.ax.grid()
+        if(visible == True):
+            #Graph the points
+            x_val = [x[0] for x in points]
+            y_val = [x[1] for x in points]
+            self.ax.plot(x_val,y_val,'o', color='orange')
+        # Data for plotting
+        self.ax.plot(x1, function(x1), color='tab:blue')
+        self.ax.autoscale_view()
+        # Text to print
+        func = str(lagP).replace("**", "^")
+        msg2 = "Function({} ,{} ,{} )".format(func,points[0][0],points[len(points)-1][0])
+        return msg2
+
+    def updateGraphInter3(self, points, visible, function):
+        #Clear graph
+        self.ax.clear()
+        self.ax.grid()
+        if(visible == True):
+            #Graph the points
+            x_val = [x[0] for x in points]
+            y_val = [x[1] for x in points]
+            self.ax.plot(x_val,y_val,'o', color='orange')
+        # Data for plotting
+        x = Symbol('x')
+        functionPrint = ""
+        for i in range(len(function)):
+            x2 = np.linspace(points[i][0], points[i + 1][0], num = 100)
+            fnt = lambdify(x, function[i], 'numpy')
+            #Create string function to print
+            func = str(fnt(x)).replace("**", "^")
+            functionPrint += "Function( {} , {}, {} ) \n".format(func,points[i][0],points[i + 1][0])
+            #Graph the function
+            if i == 0:
+                self.ax.plot(x2, fnt(x2), color = self.rgb[i], label = "Splines")
+            else:
+                self.ax.plot(x2, fnt(x2), color = self.rgb[i])
+
+        self.ax.autoscale_view()
+        return functionPrint
 
 class Ui_MainWindow(object):
     #Points from image
@@ -50,12 +113,36 @@ class Ui_MainWindow(object):
     menor = ()
     mayorFinal = ()
     menorFinal = ()
+    vis1 = True
+    vis2 = True
+    vis3 = True
+    #Polinomial
+    fnp = 0
+    polP = 0
+    ecspl = 0
+
+    #Lagrange
+    fnl = 0
+    lagP = 0
+    #Splines
+
+    #Colors
+    rgb = []
+
+    #Msg
+    msg1 = ""
+    msg2 = ""
+    msg3 = ""
+
+
     def setupUi(self, MainWindow):
         #Setup window
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet("background-color: rgb(230, 230, 230);")
+
+        
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -225,9 +312,7 @@ class Ui_MainWindow(object):
         self.label_grafico.setObjectName("label_grafico")
 
         
-        #Button gráfico puntos expand
-        self.buttonExpandPoints = QtWidgets.QPushButton(self.centralwidget)
-        self.buttonExpandPoints.setGeometry(QtCore.QRect(1240, 50, 25, 25))
+
         
         #Graph the points matplot
         self.chart_points = Canvas(self.centralwidget)
@@ -326,7 +411,24 @@ class Ui_MainWindow(object):
         self.buttonProcessInterpol.setStyleSheet("background-color:rgb(102, 103, 105);")
         self.buttonProcessInterpol.setObjectName("buttonProcessInterpol")
 
+        #Buttons visibility points
+        #Button visib interpol1
+        self.buttonVisInter1 = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonVisInter1.setGeometry(QtCore.QRect(395, 355, 25, 25))
+        self.buttonVisInter1.setStyleSheet("background-color:rgb(102, 103, 105);")
+        self.buttonVisInter1.setObjectName("buttonVisInter1")
 
+        #Button visib interpol2
+        self.buttonVisInter2 = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonVisInter2.setGeometry(QtCore.QRect(815, 355, 25, 25))
+        self.buttonVisInter2.setStyleSheet("background-color:rgb(102, 103, 105);")
+        self.buttonVisInter2.setObjectName("buttonVisInter2")
+
+        #Button visib interpol3
+        self.buttonVisInter3 = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonVisInter3.setGeometry(QtCore.QRect(1235, 355, 25, 25))
+        self.buttonVisInter3.setStyleSheet("background-color:rgb(102, 103, 105);")
+        self.buttonVisInter3.setObjectName("buttonVisInter3")
 
        
         #Set MainWindow
@@ -351,6 +453,11 @@ class Ui_MainWindow(object):
         self.actionLoad_Image.setObjectName("actionLoad_Image")
         self.menuArchivo.addAction(self.actionLoad_Image)
 
+        #Export functions
+        self.exportFunction = QtWidgets.QAction(MainWindow)
+        self.exportFunction.setObjectName("exportFunction")
+        self.menuArchivo.addAction(self.exportFunction)
+
         
         self.menubar.addAction(self.menuArchivo.menuAction())
 
@@ -364,43 +471,55 @@ class Ui_MainWindow(object):
         #Load Image
         self.actionLoad_Image.triggered.connect(self.loadImage)
         self.buttonLoad.clicked.connect(self.loadImage)
+
+        #Exportar funciones
+        self.exportFunction.triggered.connect(self.exportFunc)
+
         #PressButton Define points
         self.buttonDefine.clicked.connect(self.calcPoints)
-        #PressButton Plot Points
-        self.buttonExpandPoints.clicked.connect(self.expandPlotPoints)
         #Process Interpolacion
         self.buttonProcessInterpol.clicked.connect(self.processInterpolation)
 
+        #PressButton vis1
+        self.buttonVisInter1.clicked.connect(self.changeVis1)
+        #PressButton vis2
+        self.buttonVisInter2.clicked.connect(self.changeVis2)
+        #PressButton vis3
+        self.buttonVisInter3.clicked.connect(self.changeVis3)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Proyecto Metodos Numericos 2021-I       Interpolador"))
         self.title.setText(_translate("MainWindow", "Proyecto métodos 2021-I"))
         self.label_original.setText(_translate("MainWindow", "Imagen original"))
         self.label_hsv.setText(_translate("MainWindow", "Imagen BGR2HSV"))
         self.label_puntos.setText(_translate("MainWindow", "Puntos encontrados: ",))
         self.label_grafico.setText(_translate("MainWindow", "Gráfico de puntos"))
         self.subtitle.setText(_translate("MainWindow", "Interpolación"))
-        self.label_inter1.setText(_translate("MainWindow", "Interpolación lineal"))
+        self.label_inter1.setText(_translate("MainWindow", "Interpolación polinomial"))
         self.buttonDefine.setText(_translate("MainWindow", "Def"))
-        self.label_inter2.setText(_translate("MainWindow", "Interpolación lineal"))
+        self.label_inter2.setText(_translate("MainWindow", "Interpolación Lagrange"))
         self.label_inter3.setText(_translate("MainWindow", "Interpolación por splines"))
         self.label_x1.setText(_translate("MainWindow", "X1:"))
         self.label_y1.setText(_translate("MainWindow", "Y1:"))
         self.label_x2.setText(_translate("MainWindow", "X2:"))
         self.label_y2.setText(_translate("MainWindow", "Y2:"))
         self.label_npoints.setText(_translate("MainWindow", "# puntos:"))
-        self.menuArchivo.setTitle(_translate("MainWindow", "File"))
-        self.actionLoad_Image.setText(_translate("MainWindow", "Load Image"))
-        #Buttons expand
-        pixmap = QPixmap("assets/imgGUI/expand.png")
-        self.buttonExpandPoints.setIcon(QIcon(pixmap))
+        self.menuArchivo.setTitle(_translate("MainWindow", "Archivo"))
+        self.actionLoad_Image.setText(_translate("MainWindow", "Cargar imagen"))
+        self.exportFunction.setText(_translate("MainWindow", "Exportar funciones"))
+
         #Button Define points
         pixmap = QPixmap("assets/imgGUI/coordinate_system_100px.png")
         self.buttonDefine.setIcon(QIcon(pixmap))
         #Button process
         pixmap = QPixmap("assets/imgGUI/services_60px.png")
         self.buttonProcessInterpol.setIcon(QIcon(pixmap))
-
+        #Button visi 1 2 3
+        pixmap = QPixmap("assets/imgGUI/eye_52px.png")
+        self.buttonVisInter1.setIcon(QIcon(pixmap))
+        self.buttonVisInter2.setIcon(QIcon(pixmap))
+        self.buttonVisInter3.setIcon(QIcon(pixmap))
     #Methods
     def loadImage(self):
         pixmap = QPixmap("assets/imgGUI/loadImage.png")
@@ -463,7 +582,7 @@ class Ui_MainWindow(object):
                     self.menorFinal = (float(self.text_x2.toPlainText()),float(self.text_y2.toPlainText()))
                     self.final_points = getPointsCV2.transformPoints(self.final_points, self.menor,self.mayor,self.mayorFinal,self.menorFinal)
             #Update the graph of points
-            self.chart_points.updateGraphPonts(self.final_points,self.menorFinal, self.mayorFinal)
+            self.chart_points.updateGraphPonts(self.final_points)
             self.chart_points.draw()
         else:
             self.chart_points.cleanGraph()
@@ -471,16 +590,33 @@ class Ui_MainWindow(object):
     
     def processInterpolation(self):
         if (type(self.final_points) is list and len(self.final_points)>0): 
+            #Set vis to true
+            self.vis1 = True
+            self.vis2 = True
+            self.vis3 = True
+            #Set points
+            x = Symbol('x')
+            self.x1 = np.linspace(self.final_points[0][0], self.final_points[len(self.final_points) - 1][0], num = 100)
+
             #Interpol 1
-            self.chart_interpol1.updateGraphPonts(self.final_points,self.menorFinal, self.mayorFinal)
+            self.polP = pol.polinomial(self.final_points)
+            self.fnp = lambdify(x, self.polP, 'numpy')
+            self.msg1 = self.chart_interpol1.updateGraphInter1(self.final_points, self.vis2, self.fnp, self.x1, self.polP)
             self.chart_interpol1.draw()
-            self.text_eq1.setText("asdasd")
+            self.text_eq1.setText(self.msg1)
+
             #Interpol 2
-            self.chart_interpol2.updateGraphPonts(self.final_points,self.menorFinal, self.mayorFinal)
+            self.lagP = lge.lagrange(self.final_points)
+            self.fnl = lambdify(x, self.lagP, 'numpy')
+            self.msg2 = self.chart_interpol2.updateGraphInter2(self.final_points, self.vis2, self.fnl, self.x1, self.lagP)
             self.chart_interpol2.draw()
+            self.text_eq2.setText(self.msg2)
+
             #Interpol 3
-            self.chart_interpol3.updateGraphPonts(self.final_points,self.menorFinal, self.mayorFinal)
+            self.ecspl = spl.splines(self.final_points)
+            self.msg3 = self.chart_interpol3.updateGraphInter3(self.final_points, self.vis3, self.ecspl)
             self.chart_interpol3.draw()
+            self.text_eq3.setText(self.msg3)
         else:
             #Interpol 1
             self.chart_interpol1.cleanGraph()
@@ -492,9 +628,41 @@ class Ui_MainWindow(object):
             self.chart_interpol3.cleanGraph()
             self.chart_interpol3.draw()
         
-    
-    def expandPlotPoints(self):
-        print("Graph")
+    def changeVis1(self):
+        if (type(self.final_points) is list and len(self.final_points)>0): 
+            self.vis1 = not self.vis1
+            self.chart_interpol1.updateGraphInter1(self.final_points, self.vis1, self.fnp, self.x1, self.polP)
+            self.chart_interpol1.draw()
+
+    def changeVis2(self):
+        if (type(self.final_points) is list and len(self.final_points)>0): 
+            self.vis2 = not self.vis2
+            self.chart_interpol2.updateGraphInter2(self.final_points, self.vis2, self.fnl, self.x1, self.lagP)
+            self.chart_interpol2.draw()
+
+    def changeVis3(self):
+        if (type(self.final_points) is list and len(self.final_points)>0): 
+            self.vis3 = not self.vis3
+            self.chart_interpol3.updateGraphInter3(self.final_points, self.vis3, self.ecspl)
+            self.chart_interpol3.draw()
+
+    def exportFunc(self):
+        if(self.msg1 != "" and self.msg2 != "" and self.msg3 != ""):
+            #Erasing all inside document
+            open('funciones.txt', 'w').close()
+            # Opening and Closing  "funciones.txt"
+            file1 = open("funciones.txt","a")
+
+            L = ["                              Proyecto métodos numéricos 2021-1\n","                              ------------------------------------ \n","\n",
+            "Proyecto realizado por: \n","      Nicolás Darío Mejía Borda \n","     Juan Sebastián Rodríguez Castellanos\n",
+            "\n","\n","Las funciones que se muestran a continuación se pueden graficar distintas aplicaciones, como por ejemplo Geogebra.","\n","\n"
+            ] 
+            file1.writelines(L)
+            file1.write("\n\n\nInterpolación polinomial: \n\n{}\n".format(self.msg1))
+            file1.write("\n\nInterpolación Lagrange: \n\n{}\n".format(self.msg2))
+            file1.write("\n\nInterpolación por Splines: \n\n{}\n".format(self.msg3))
+            file1.close()
+        
 
 
 if __name__ == "__main__":

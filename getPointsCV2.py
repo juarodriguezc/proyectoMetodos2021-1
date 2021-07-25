@@ -9,6 +9,8 @@ def getPointsImage(imagePath):
     #Set border
     x_border = 20
     y_border = 20
+    #Escalar transformacion
+    escalar = 100
     #Load image from imagePath
     image = cv2.imread(imagePath , -1)
     #Check if imagePath is correct
@@ -73,12 +75,15 @@ def getPointsImage(imagePath):
     list_points.sort(key=itemgetter(0))
     #Create numpy array
     points_array = np.array(list_points)
-    #Transform to x,y form
+    #Transform to x,y form and divide by 100
     points_array[:,1] =  (points_array[:,1] *-1)+height
+    points_array = points_array / escalar
     #Transform to list form
     list_points = points_array.tolist()
+    maxPoint = (max_value[0]/escalar,((max_value[1]*-1)+height)/escalar)
+    minPoint = (min_value[0]/escalar,((min_value[1]*-1)+height)/escalar)
     #Return list, minpoint, maxpoint
-    return list_points, ((max_value[0],(max_value[1]*-1)+height)), ((min_value[0],(min_value[1]*-1)+height))
+    return list_points, maxPoint, minPoint
 
 def transformPoints(points, smaller, bigger, rSmaller, rBigger):
     #Linear transformation using this 2 points as ref

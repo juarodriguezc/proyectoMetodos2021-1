@@ -1,0 +1,31 @@
+                              Proyecto métodos numéricos 2021-1
+                              ------------------------------------ 
+
+Proyecto realizado por: 
+      Nicolás Darío Mejía Borda 
+     Juan Sebastián Rodríguez Castellanos
+
+
+Las funciones que se muestran a continuación se pueden graficar distintas aplicaciones, como por ejemplo Geogebra.
+
+
+
+
+Interpolación polinomial: 
+
+Function(0.00013*x^5 - 0.00434*x^4 + 0.04592*x^3 + 0.5966*x^2 - 5.08733*x + 9.9676 ,0.72 ,5.32 )
+
+
+Interpolación Lagrange: 
+
+Function(0.00013329961842535858*x^5 - 0.0043441414293797984*x^4 + 0.045916689251919385*x^3 + 0.5965950144313108*x^2 - 5.0873260090881601*x + 9.9676032045663441 ,0.72 ,5.32 )
+
+
+Interpolación por Splines: 
+
+Function( 0.02672*x^3 + 0.6287*x^2 - 5.11001*x + 9.97332 , 0.72, 1.72 ) 
+Function( 0.01359*x^3 + 0.69645*x^2 - 5.22655*x + 10.04013 , 1.72, 2.72 ) 
+Function( 0.00453*x^3 + 0.77037*x^2 - 5.42761*x + 10.22242 , 2.72, 3.52 ) 
+Function( -0.00235*x^3 + 0.84306*x^2 - 5.68346*x + 10.52263 , 3.52, 4.52 ) 
+Function( -0.00765*x^3 + 0.9148*x^2 - 6.00773*x + 11.0112 , 4.52, 5.32 ) 
+
