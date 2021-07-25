@@ -59,16 +59,16 @@ def splines(puntos):
             cfdd.append(0)
         coeficientes.append(cfdd)
 
-    ext0 = [3 * (puntos[0][0] ** 2), 2 * puntos[0][0], 1, 0]
+    ext0 = [6 * (puntos[0][0]), 2, 0, 0]
     for i in range(4 * (longitud - 1) - 4):
         ext0.append(0)
     coeficientes.append(ext0)
     ext1 = []
     for i in range(4 * (longitud - 1) - 4):
         ext1.append(0)
-    ext1.append(3 * (puntos[longitud - 1][0] ** 2))
-    ext1.append(2 * puntos[longitud - 1][0])
-    ext1.append(1)
+    ext1.append(6 * puntos[longitud - 1][0])
+    ext1.append(2)
+    ext1.append(0)
     ext1.append(0)
     coeficientes.append(ext1)
 
@@ -79,13 +79,9 @@ def splines(puntos):
     for i in range(longitud - 2):
         solucion.append([0])
         solucion.append([0])
-    polinomio = lag.lagrange(puntos)
-    derivado = diff(polinomio, x)
-    p0 = derivado.evalf(subs = {x:puntos[0][0]})
-    p1 = derivado.evalf(subs = {x:puntos[longitud - 1][0]})
 
-    solucion.append([float(round(p0, 5))])
-    solucion.append([float(round(p1, 5))])
+    solucion.append([0])
+    solucion.append([0])
 
     r = linalg.solve(coeficientes, solucion)
     rarray = []
