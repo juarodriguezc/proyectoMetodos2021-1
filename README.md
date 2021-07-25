@@ -4,6 +4,10 @@
 ```
 pip install -r requirements.txt
 ```
+## Compile and run
+```
+python proyectoGUI.py
+```
 
 ## Autores
 Nicolás Darío Mejía Borda
