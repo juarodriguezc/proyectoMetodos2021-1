@@ -42,49 +42,62 @@ class Canvas(FigureCanvas):
         self.ax.plot(x_val,y_val,'o')
         self.ax.autoscale_view()
     
-    def updateGraphInter1(self, points, visible, function, x1, polP):
+    def updateGraphInter1(self, points, visible, adjust, function, x1, polP):
         #Clear graph
         self.ax.clear()
         self.ax.grid()
+        x_val = [x[0] for x in points]
+        y_val = [x[1] for x in points]
         if(visible == True):
             #Graph the points
-            x_val = [x[0] for x in points]
-            y_val = [x[1] for x in points]
             self.ax.plot(x_val,y_val,'o', color='orange')
         # Data for plotting
         self.ax.plot(x1, function(x1), color='tab:green')
-        self.ax.autoscale_view()
+        if(adjust == True):
+            self.ax.autoscale_view()
+        else:
+            minY = min(y_val)
+            maxY = max(y_val)
+            dify = math.ceil(((maxY - minY) / (len(points))))
+            self.ax.set_ylim([int(minY - dify), int(maxY + dify)])
+
         # Text to print
         func = str(polP).replace("**", "^")
         msg1 = "Function({} ,{} ,{} )".format(func,points[0][0],points[len(points)-1][0])
         return msg1
 
 
-    def updateGraphInter2(self, points, visible, function, x1, lagP):
+    def updateGraphInter2(self, points, visible, adjust, function, x1, lagP):
         #Clear graph
         self.ax.clear()
         self.ax.grid()
+        x_val = [x[0] for x in points]
+        y_val = [x[1] for x in points]
         if(visible == True):
             #Graph the points
-            x_val = [x[0] for x in points]
-            y_val = [x[1] for x in points]
             self.ax.plot(x_val,y_val,'o', color='orange')
         # Data for plotting
         self.ax.plot(x1, function(x1), color='tab:blue')
-        self.ax.autoscale_view()
+        if(adjust == True):
+            self.ax.autoscale_view()
+        else:
+            minY = min(y_val)
+            maxY = max(y_val)
+            dify = math.ceil(((maxY - minY) / (len(points))))
+            self.ax.set_ylim([int(minY - dify), int(maxY + dify)])
         # Text to print
         func = str(lagP).replace("**", "^")
         msg2 = "Function({} ,{} ,{} )".format(func,points[0][0],points[len(points)-1][0])
         return msg2
 
-    def updateGraphInter3(self, points, visible, function):
+    def updateGraphInter3(self, points, visible, adjust, function):
         #Clear graph
         self.ax.clear()
         self.ax.grid()
+        x_val = [x[0] for x in points]
+        y_val = [x[1] for x in points]
         if(visible == True):
             #Graph the points
-            x_val = [x[0] for x in points]
-            y_val = [x[1] for x in points]
             self.ax.plot(x_val,y_val,'o', color='orange')
         # Data for plotting
         x = Symbol('x')
@@ -100,8 +113,14 @@ class Canvas(FigureCanvas):
                 self.ax.plot(x2, fnt(x2), color = self.rgb[i], label = "Splines")
             else:
                 self.ax.plot(x2, fnt(x2), color = self.rgb[i])
+        if(adjust == True):
+            self.ax.autoscale_view()
+        else:
+            minY = min(y_val)
+            maxY = max(y_val)
+            dify = math.ceil(((maxY - minY) / (len(points))))
+            self.ax.set_ylim([int(minY - dify), int(maxY + dify)])
 
-        self.ax.autoscale_view()
         return functionPrint
 
 class Ui_MainWindow(object):
@@ -113,9 +132,15 @@ class Ui_MainWindow(object):
     menor = ()
     mayorFinal = ()
     menorFinal = ()
+    #Visibility
     vis1 = True
     vis2 = True
     vis3 = True
+    #Adjust
+    adj1 = True
+    adj2 = True
+    adj3 = True
+
     #Polinomial
     fnp = 0
     polP = 0
@@ -430,6 +455,27 @@ class Ui_MainWindow(object):
         self.buttonVisInter3.setStyleSheet("background-color:rgb(102, 103, 105);")
         self.buttonVisInter3.setObjectName("buttonVisInter3")
 
+
+
+        #Buttons adjust points
+        #Button adjust interpol1
+        self.buttonAdjustInter1 = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonAdjustInter1.setGeometry(QtCore.QRect(360, 355, 25, 25))
+        self.buttonAdjustInter1.setStyleSheet("background-color:rgb(102, 103, 105);")
+        self.buttonAdjustInter1.setObjectName("buttonAdjustInter1")
+
+        #Button adjust interpol2
+        self.buttonAdjustInter2 = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonAdjustInter2.setGeometry(QtCore.QRect(780, 355, 25, 25))
+        self.buttonAdjustInter2.setStyleSheet("background-color:rgb(102, 103, 105);")
+        self.buttonAdjustInter2.setObjectName("buttonVisInter2")
+
+        #Button adjust interpol3
+        self.buttonAdjustInter3 = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonAdjustInter3.setGeometry(QtCore.QRect(1200, 355, 25, 25))
+        self.buttonAdjustInter3.setStyleSheet("background-color:rgb(102, 103, 105);")
+        self.buttonAdjustInter3.setObjectName("buttonAdjustInter3")
+
        
         #Set MainWindow
         MainWindow.setCentralWidget(self.centralwidget)
@@ -487,6 +533,14 @@ class Ui_MainWindow(object):
         #PressButton vis3
         self.buttonVisInter3.clicked.connect(self.changeVis3)
 
+
+        #PressButton adjust 1
+        self.buttonAdjustInter1.clicked.connect(self.changeAdjust1)
+        #PressButton adjust 2
+        self.buttonAdjustInter2.clicked.connect(self.changeAdjust2)
+        #PressButton adjust 3
+        self.buttonAdjustInter3.clicked.connect(self.changeAdjust3)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Proyecto Metodos Numericos 2021-I       Interpolador"))
@@ -520,6 +574,12 @@ class Ui_MainWindow(object):
         self.buttonVisInter1.setIcon(QIcon(pixmap))
         self.buttonVisInter2.setIcon(QIcon(pixmap))
         self.buttonVisInter3.setIcon(QIcon(pixmap))
+
+        #Button adjust
+        pixmap = QPixmap("assets/imgGUI/adjust_64px.png")
+        self.buttonAdjustInter1.setIcon(QIcon(pixmap))
+        self.buttonAdjustInter2.setIcon(QIcon(pixmap))
+        self.buttonAdjustInter3.setIcon(QIcon(pixmap))
     #Methods
     def loadImage(self):
         pixmap = QPixmap("assets/imgGUI/loadImage.png")
@@ -594,6 +654,10 @@ class Ui_MainWindow(object):
             self.vis1 = True
             self.vis2 = True
             self.vis3 = True
+            #Set adjust to true
+            self.adj1 = True
+            self.adj2 = True
+            self.adj3 = True
             #Set points
             x = Symbol('x')
             self.x1 = np.linspace(self.final_points[0][0], self.final_points[len(self.final_points) - 1][0], num = 100)
@@ -601,20 +665,20 @@ class Ui_MainWindow(object):
             #Interpol 1
             self.polP = pol.polinomial(self.final_points)
             self.fnp = lambdify(x, self.polP, 'numpy')
-            self.msg1 = self.chart_interpol1.updateGraphInter1(self.final_points, self.vis2, self.fnp, self.x1, self.polP)
+            self.msg1 = self.chart_interpol1.updateGraphInter1(self.final_points, self.vis1, self.adj1, self.fnp, self.x1, self.polP)
             self.chart_interpol1.draw()
             self.text_eq1.setText(self.msg1)
 
             #Interpol 2
             self.lagP = lge.lagrange(self.final_points)
             self.fnl = lambdify(x, self.lagP, 'numpy')
-            self.msg2 = self.chart_interpol2.updateGraphInter2(self.final_points, self.vis2, self.fnl, self.x1, self.lagP)
+            self.msg2 = self.chart_interpol2.updateGraphInter2(self.final_points, self.vis2, self.adj2, self.fnl, self.x1, self.lagP)
             self.chart_interpol2.draw()
             self.text_eq2.setText(self.msg2)
 
             #Interpol 3
             self.ecspl = spl.splines(self.final_points)
-            self.msg3 = self.chart_interpol3.updateGraphInter3(self.final_points, self.vis3, self.ecspl)
+            self.msg3 = self.chart_interpol3.updateGraphInter3(self.final_points, self.vis3, self.adj3, self.ecspl)
             self.chart_interpol3.draw()
             self.text_eq3.setText(self.msg3)
         else:
@@ -631,20 +695,42 @@ class Ui_MainWindow(object):
     def changeVis1(self):
         if (type(self.final_points) is list and len(self.final_points)>0): 
             self.vis1 = not self.vis1
-            self.chart_interpol1.updateGraphInter1(self.final_points, self.vis1, self.fnp, self.x1, self.polP)
+            self.chart_interpol1.updateGraphInter1(self.final_points, self.vis1, self.adj1, self.fnp, self.x1, self.polP)
             self.chart_interpol1.draw()
 
     def changeVis2(self):
         if (type(self.final_points) is list and len(self.final_points)>0): 
             self.vis2 = not self.vis2
-            self.chart_interpol2.updateGraphInter2(self.final_points, self.vis2, self.fnl, self.x1, self.lagP)
+            self.chart_interpol2.updateGraphInter2(self.final_points, self.vis2, self.adj2, self.fnl, self.x1, self.lagP)
             self.chart_interpol2.draw()
 
     def changeVis3(self):
         if (type(self.final_points) is list and len(self.final_points)>0): 
             self.vis3 = not self.vis3
-            self.chart_interpol3.updateGraphInter3(self.final_points, self.vis3, self.ecspl)
+            self.chart_interpol3.updateGraphInter3(self.final_points, self.vis3, self.adj3, self.ecspl)
             self.chart_interpol3.draw()
+
+    #Adjust graph
+
+    def changeAdjust1(self):
+        if (type(self.final_points) is list and len(self.final_points)>0): 
+            self.adj1 = not self.adj1
+            self.chart_interpol1.updateGraphInter1(self.final_points, self.vis1, self.adj1, self.fnp, self.x1, self.polP)
+            self.chart_interpol1.draw()
+
+    def changeAdjust2(self):
+        if (type(self.final_points) is list and len(self.final_points)>0): 
+            self.adj2 = not self.adj2
+            self.chart_interpol2.updateGraphInter2(self.final_points, self.vis2, self.adj2, self.fnl, self.x1, self.polP)
+            self.chart_interpol2.draw()
+
+    def changeAdjust3(self):
+        if (type(self.final_points) is list and len(self.final_points)>0): 
+            self.adj3 = not self.adj3
+            self.chart_interpol3.updateGraphInter3(self.final_points, self.vis3, self.adj3, self.ecspl)
+            self.chart_interpol3.draw()
+
+
 
     def exportFunc(self):
         if(self.msg1 != "" and self.msg2 != "" and self.msg3 != ""):

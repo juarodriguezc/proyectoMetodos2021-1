@@ -56,7 +56,7 @@ def getPointsImage(imagePath):
     img_points = cv2.circle(img_points, min_value, 20, (255,0,255), -1)
     img_points = cv2.circle(img_points, max_value, 20, (255,0,255), -1)
     list_points = []
-    for point in (points_array[::20]):
+    for point in (points_array[::5]):
         img_points = cv2.circle(img_points, point, 8, (0,0,255), -1)
         list_points.append((point[0],point[1]))
     
